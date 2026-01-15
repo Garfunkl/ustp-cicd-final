@@ -1,27 +1,53 @@
 name: Test Build
-
 on:
   pull_request:
     branches: [ main ]
   push:
     branches: [ main ]
 jobs:
-  test-build:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [20.x]
+      fail-fast: false # Continue jobs even if one fails
 
     steps:
     - name: Checkout
       uses: actions/checkout@v5
-
-    - name: Setup Node.js
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: ${{ matrix.node-version }}
         cache: "npm"
 
     - name: Install dependencies
       run: npm install
 
+    - name: Run tests
+      run: npm run test:ci
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.os }}-${{ github.sha }}
+        path: |
+          coverage/
+          junit.xml
+        retention-days: 30
+        compression-level: 6
+
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Jest Tests (${{ matrix.os }})
+        path: junit.xml
+        reporter: jest-junit
+        
     - name: Run build
       run: npm run build
 
@@ -29,7 +55,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: success()
       with:
-        name: web-app-build-${{ github.sha }}
+        name: web-app-build-${{ matrix.os }}-${{ github.sha }}
         path: |
           dist/
           !dist/.vite/
@@ -44,3 +70,34 @@ jobs:
         echo ""
         echo "Total size:"
         du -sh dist/
+
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: "npm"
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Generate coverage report
+      run: npm run test:coverage
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+        verbose: true
