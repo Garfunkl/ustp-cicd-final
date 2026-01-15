@@ -1,4 +1,5 @@
 name: Test Build
+
 on:
   pull_request:
     branches: [ main ]
@@ -6,20 +7,39 @@ on:
 jobs:
   test-build:
     runs-on: ubuntu-latest
-    
-    # 🧪 No special permissions needed for build-only mode
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: "npm"
-          
-      - name: Install dependencies
-        run: npm install
 
-      - name: Run build
-        run: npm run build
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: "npm"
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run build
+      run: npm run build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: web-app-build-${{ github.sha }}
+        path: |
+          dist/
+          !dist/.vite/
+        retention-days: 30
+        compression-level: 6
+
+    - name: List build contents
+      if: success()
+      run: |
+        echo "Build artifacts contents:"
+        ls -la dist/
+        echo ""
+        echo "Total size:"
+        du -sh dist/
