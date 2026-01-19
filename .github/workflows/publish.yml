@@ -1,0 +1,93 @@
+name: Publish to GitHub Pages
+on:
+  workflow_dispatch:  # Manual trigger
+    inputs:
+      build_sha:
+        description: 'SHA of the build to publish (leave empty to use latest main)'
+        required: false
+        type: string
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: "npm"
+        
+    - name: Determine build artifacts
+      id: artifacts
+      run: |
+        if [ -n "${{ github.event.inputs.build_sha }}" ]; then
+          echo "Using specified SHA: ${{ github.event.inputs.build_sha }}"
+          echo "build_sha=${{ github.event.inputs.build_sha }}" >> $GITHUB_OUTPUT
+        else
+          # Get latest commit from main branch
+          BUILD_SHA=$(git rev-parse origin/main)
+          echo "Using latest main SHA: $BUILD_SHA"
+          echo "build_sha=$BUILD_SHA" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: web-app-build-*
+        merge-multiple: true
+        run-id: ${{ steps.artifacts.outputs.build_sha }}  # Use artifacts from specific run
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+      
+    - name: Fix asset paths for GitHub Pages
+      run: |
+        # If deploying to a subdirectory, update asset paths
+        if [ "${{ github.repository_owner }}" != "${{ github.event.repository }}" ]; then
+          # Update base path for subdirectory deployment
+          find dist -name "*.html" -type f -exec sed -i 's|href="/|href="/${{ github.event.repository }}/|g' {} \;
+          find dist -name "*.js" -type f -exec sed -i 's|"/|"/${{ github.event.repository }}/|g' {} \;
+        fi
+        
+    - name: Upload to GitHub Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./dist
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+  notify:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Notify deployment status
+      run: |
+        if [ "${{ needs.publish.result }}" == "success" ]; then
+          echo "✅ Web application successfully deployed to GitHub Pages"
+          echo "🌐 URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository }}"
+        else
+          echo "❌ Deployment failed"
+          exit 1
+        fi
