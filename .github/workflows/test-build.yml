@@ -6,6 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
+  # This job ONLY runs tests on multiple operating systems.
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -32,7 +33,7 @@ jobs:
       
     - name: Upload test results
       uses: actions/upload-artifact@v4
-      if: always() # Run for all OSes, even on failure
+      if: always()
       with:
         name: test-results-${{ matrix.os }}-${{ github.sha }}
         path: |
@@ -40,34 +41,12 @@ jobs:
           junit.xml
         retention-days: 30
         compression-level: 6
-        
-    # - name: Publish test results
-    #   uses: dorny/test-reporter@v1
-    #   if: always() && matrix.os == 'ubuntu-latest' # Only run from Ubuntu
-    #   with:
-    #     name: Vitest Tests (${{ matrix.os }})
-    #     path: junit.xml
-    #     reporter: java-junit # Changed from jest-junit
-        
-    - name: Run build
-      if: success() # Only build if tests pass
-      run: npm run build
-      
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      if: success() # Only upload if build succeeds
-      with:
-        name: web-app-build-${{ matrix.os }}-${{ github.sha }}
-        path: |
-          dist/
-          !dist/.vite/
-        retention-days: 30
-        compression-level: 6
 
-  coverage:
-    needs: test
+  # This job builds the app and uploads the artifact, running only on Ubuntu.
+  build-and-upload:
+    # This job depends on the 'test' job completing successfully on all OSes.
+    needs: test 
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
     - name: Checkout
@@ -82,15 +61,13 @@ jobs:
     - name: Install dependencies
       run: npm install --legacy-peer-deps
       
-    - name: Generate coverage report
-      run: npm run test:coverage
+    - name: Run build
+      run: npm run build
       
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
+    - name: Upload Pages artifact
+      uses: actions/upload-artifact@v4
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage/lcov.info
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
-        verbose: true
+        name: github-pages
+        # IMPORTANT: Verify this path is correct for your project
+        path: ./dist
+        retention-days: 1
