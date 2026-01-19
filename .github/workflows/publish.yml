@@ -1,26 +1,61 @@
 name: Publish to GitHub Pages
 on:
   workflow_dispatch:
+    inputs:
+      run_branch:
+        description: 'Branch of the last successful build (default: main)'
+        required: false
+        default: 'main'
+      artifact_name:
+        description: 'Build artifact to use (default: github-pages)'
+        required: false
+        default: 'github-pages' # Changed from 'webapp-build-ubuntu-latest'
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   publish:
+    name: Download build artifact & deploy to Pages
     runs-on: ubuntu-latest
-    environment: production
-    
     steps:
-    - name: Setup Pages
-      uses: actions/configure-pages@v5
-      
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
-      with:
-        pattern: web-app-build-*
-        merge-multiple: true
-        
-    - name: Deploy to GitHub Pages
-      uses: actions/deploy-pages@v4
+      - name: Checkout (optional)
+        uses: actions/checkout@v4
+
+      # Downloads the artifact from the last successful run of the test-build.yml on the desired branch.
+      - name: Download build artifact from latest successful build run
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: test-build.yml # Changed from 'build.yml'
+          branch: ${{ inputs.run_branch }}
+          workflow_conclusion: success
+          name: ${{ inputs.artifact_name }}
+          path: ./site
+          if_no_artifact_found: fail
+          check_artifacts: true
+          skip_unpack: false
+
+      # Optional: Verify that content was downloaded
+      - name: List downloaded files (debug)
+        run: |
+          echo "Listing ./site:"
+          ls -la ./site
+          echo "Attempting to find an index.html (typical for SPA/Static Site):"
+          find ./site -maxdepth 2 -name "index.html" -print || true
+
+      # Package the site contents as a Pages artifact
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+      # Deploy the Pages artifact
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
