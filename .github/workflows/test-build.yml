@@ -32,31 +32,32 @@ jobs:
       
     - name: Upload test results
       uses: actions/upload-artifact@v4
-      if: always() && matrix.os == 'ubuntu-latest' # Only upload from Ubuntu
+      if: always() # Run for all OSes, even on failure
       with:
-        name: test-results-${{ github.sha }}
+        name: test-results-${{ matrix.os }}-${{ github.sha }}
         path: |
           coverage/
           junit.xml
         retention-days: 30
         compression-level: 6
         
-    - name: Publish test results
-      uses: dorny/test-reporter@v1
-      if: always() && matrix.os == 'ubuntu-latest' # Only run from Ubuntu
-      with:
-        name: Vitest Tests (${{ matrix.os }})
-        path: junit.xml
-        reporter: java-junit # Changed from jest-junit
+    # - name: Publish test results
+    #   uses: dorny/test-reporter@v1
+    #   if: always() && matrix.os == 'ubuntu-latest' # Only run from Ubuntu
+    #   with:
+    #     name: Vitest Tests (${{ matrix.os }})
+    #     path: junit.xml
+    #     reporter: java-junit # Changed from jest-junit
         
     - name: Run build
+      if: success() # Only build if tests pass
       run: npm run build
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
-      if: success() && matrix.os == 'ubuntu-latest'
+      if: success() # Only upload if build succeeds
       with:
-        name: web-app-build-${{ github.sha }}
+        name: web-app-build-${{ matrix.os }}-${{ github.sha }}
         path: |
           dist/
           !dist/.vite/
