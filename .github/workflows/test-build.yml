@@ -58,9 +58,7 @@ jobs:
       if: success() # Only upload if build succeeds
       with:
         name: web-app-build-${{ matrix.os }}-${{ github.sha }}
-        path: |
-          dist/
-          !dist/.vite/
+        path: ./dist
         retention-days: 30
         compression-level: 6
 
