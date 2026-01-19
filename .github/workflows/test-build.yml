@@ -57,7 +57,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: success() # Only upload if build succeeds
       with:
-        name: web-app-build-${{ matrix.os }}-${{ github.sha }}
+        name: github-pages
         path: ./dist
         retention-days: 30
         compression-level: 6
