@@ -1,0 +1,96 @@
+name: test-build
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [20.x]
+      fail-fast: false
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: "npm"
+        
+    - name: Install dependencies
+      run: npm install --legacy-peer-deps
+      
+    - name: Run tests
+      run: npm run test:ci
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always() # Run for all OSes, even on failure
+      with:
+        name: test-results-${{ matrix.os }}-${{ github.sha }}
+        path: |
+          coverage/
+          junit.xml
+        retention-days: 30
+        compression-level: 6
+        
+    # - name: Publish test results
+    #   uses: dorny/test-reporter@v1
+    #   if: always() && matrix.os == 'ubuntu-latest' # Only run from Ubuntu
+    #   with:
+    #     name: Vitest Tests (${{ matrix.os }})
+    #     path: junit.xml
+    #     reporter: java-junit # Changed from jest-junit
+        
+    - name: Run build
+      if: success() # Only build if tests pass
+      run: npm run build
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: success() # Only upload if build succeeds
+      with:
+        name: web-app-build-${{ matrix.os }}-${{ github.sha }}
+        path: |
+          dist/
+          !dist/.vite/
+        retention-days: 30
+        compression-level: 6
+
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: "npm"
+        
+    - name: Install dependencies
+      run: npm install --legacy-peer-deps
+      
+    - name: Generate coverage report
+      run: npm run test:coverage
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+        verbose: true

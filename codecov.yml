@@ -1,0 +1,28 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 70%
+        threshold: 1%
+        base: auto
+        if_ci_failed: error
+    patch:
+      default:
+        target: 70%
+        threshold: 1%
+        if_ci_failed: error
+
+comment:
+  layout: "reach, diff, flags, files, footer"
+  behavior: default
+  require_changes: false
+
+ignore:
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "src/test/**"
+  - "src/test-setup.js"
+
+flag_management:
+  default_flags:
+    - unittests

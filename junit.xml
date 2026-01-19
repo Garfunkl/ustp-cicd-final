@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="32" failures="0" errors="0" time="1.603">
+    <testsuite name="src/components/__tests__/Button.test.tsx" timestamp="2026-01-19T18:13:51.763Z" hostname="leamon" tests="4" failures="0" errors="0" skipped="0" time="0.066">
+        <testcase classname="src/components/__tests__/Button.test.tsx" name="Button Component &gt; renders with text" time="0.055">
+        </testcase>
+        <testcase classname="src/components/__tests__/Button.test.tsx" name="Button Component &gt; has correct default classes" time="0.003">
+        </testcase>
+        <testcase classname="src/components/__tests__/Button.test.tsx" name="Button Component &gt; passes additional props" time="0.002">
+        </testcase>
+        <testcase classname="src/components/__tests__/Button.test.tsx" name="Button Component &gt; applies custom className" time="0.004">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/hooks/__tests__/useLocalStorage.test.ts" timestamp="2026-01-19T18:13:51.765Z" hostname="leamon" tests="6" failures="0" errors="0" skipped="0" time="0.117">
+        <testcase classname="src/hooks/__tests__/useLocalStorage.test.ts" name="useLocalStorage Hook &gt; initializes with default value" time="0.046">
+        </testcase>
+        <testcase classname="src/hooks/__tests__/useLocalStorage.test.ts" name="useLocalStorage Hook &gt; saves and retrieves values from localStorage" time="0.013">
+        </testcase>
+        <testcase classname="src/hooks/__tests__/useLocalStorage.test.ts" name="useLocalStorage Hook &gt; handles complex objects" time="0.005">
+        </testcase>
+        <testcase classname="src/hooks/__tests__/useLocalStorage.test.ts" name="useLocalStorage Hook &gt; handles function updates" time="0.012">
+        </testcase>
+        <testcase classname="src/hooks/__tests__/useLocalStorage.test.ts" name="useLocalStorage Hook &gt; loads existing values from localStorage" time="0.004">
+        </testcase>
+        <testcase classname="src/hooks/__tests__/useLocalStorage.test.ts" name="useLocalStorage Hook &gt; handles invalid localStorage data" time="0.034">
+            <system-err>
+Error reading localStorage key &quot;invalid-key&quot;: SyntaxError: Unexpected token &apos;i&apos;, &quot;invalid json&quot; is not valid JSON
+    at JSON.parse (&lt;anonymous&gt;)
+    at readValue [90m(/home/simon/Documents/FH/ustp-cicd-final/[39msrc/hooks/useLocalStorage.ts:15:27[90m)[39m
+    at mountStateImpl [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:8268:24[90m)[39m
+    at mountState [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:8289:22[90m)[39m
+    at Object.useState [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:26243:18[90m)[39m
+    at Proxy.useState [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact[24m/cjs/react.development.js:1263:34[90m)[39m
+    at Module.useLocalStorage [as default] [90m(/home/simon/Documents/FH/ustp-cicd-final/[39msrc/hooks/useLocalStorage.ts:22:41[90m)[39m
+    at [90m/home/simon/Documents/FH/ustp-cicd-final/[39msrc/hooks/__tests__/useLocalStorage.test.ts:61:41
+    at TestComponent [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4m@testing-library/react[24m/dist/pure.js:330:27[90m)[39m
+    at Object.react_stack_bottom_frame [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:25904:20[90m)[39m
+Error reading localStorage key &quot;invalid-key&quot;: SyntaxError: Unexpected token &apos;i&apos;, &quot;invalid json&quot; is not valid JSON
+    at JSON.parse (&lt;anonymous&gt;)
+    at readValue [90m(/home/simon/Documents/FH/ustp-cicd-final/[39msrc/hooks/useLocalStorage.ts:15:27[90m)[39m
+    at [90m/home/simon/Documents/FH/ustp-cicd-final/[39msrc/hooks/useLocalStorage.ts:44:20
+    at Object.react_stack_bottom_frame [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:25989:20[90m)[39m
+    at runWithFiberInDEV [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:874:13[90m)[39m
+    at commitHookEffectListMount [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13249:29[90m)[39m
+    at commitHookPassiveMountEffects [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13336:11[90m)[39m
+    at commitPassiveMountOnFiber [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:15484:13[90m)[39m
+    at recursivelyTraversePassiveMountEffects [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:15439:11[90m)[39m
+    at commitPassiveMountOnFiber [90m(/home/simon/Documents/FH/ustp-cicd-final/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:15519:11[90m)[39m
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/utils/__tests__/format.test.ts" timestamp="2026-01-19T18:13:51.767Z" hostname="leamon" tests="2" failures="0" errors="0" skipped="0" time="0.005">
+        <testcase classname="src/utils/__tests__/format.test.ts" name="Basic Format Tests &gt; should format a basic string" time="0.003">
+        </testcase>
+        <testcase classname="src/utils/__tests__/format.test.ts" name="Basic Format Tests &gt; should handle empty string" time="0">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/utils/__tests__/formatting.test.js" timestamp="2026-01-19T18:13:51.767Z" hostname="leamon" tests="5" failures="0" errors="0" skipped="0" time="0.029">
+        <testcase classname="src/utils/__tests__/formatting.test.js" name="Formatting Utilities &gt; formatDate &gt; formats date correctly" time="0.019">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.js" name="Formatting Utilities &gt; formatDate &gt; handles invalid dates" time="0.001">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.js" name="Formatting Utilities &gt; formatCurrency &gt; formats currency with default USD" time="0.006">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.js" name="Formatting Utilities &gt; formatCurrency &gt; formats currency with different currency codes" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.js" name="Formatting Utilities &gt; formatCurrency &gt; handles zero values" time="0.001">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/utils/__tests__/formatting.test.ts" timestamp="2026-01-19T18:13:51.768Z" hostname="leamon" tests="15" failures="0" errors="0" skipped="0" time="0.031">
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatDate &gt; formats date correctly" time="0.018">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatDate &gt; handles null dates" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatDate &gt; handles undefined dates" time="0.001">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatCurrency &gt; formats currency with default USD" time="0.006">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatCurrency &gt; formats currency with EUR" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatCurrency &gt; formats currency with GBP" time="0.001">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatCurrency &gt; handles zero values" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatCurrency &gt; handles negative values" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatNumber &gt; formats basic numbers" time="0.001">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatNumber &gt; formats with custom options" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; formatNumber &gt; formats large numbers" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; truncateText &gt; truncates long text" time="0.001">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; truncateText &gt; returns original text if shorter than max" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; truncateText &gt; handles exact length" time="0">
+        </testcase>
+        <testcase classname="src/utils/__tests__/formatting.test.ts" name="Formatting Utilities &gt; truncateText &gt; handles empty string" time="0">
+        </testcase>
+    </testsuite>
+</testsuites>

@@ -32,3 +32,13 @@ pids
 .devcontainer/
 
 .spark-workbench-id
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Test results
+junit.xml
+
+# Jest
+.nyc_output
