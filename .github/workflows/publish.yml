@@ -1,6 +1,11 @@
 name: Publish to GitHub Pages
 on:
   workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch to deploy from (e.g., main)'
+        required: false
+        default: 'main'
 
 permissions:
   contents: read
@@ -8,19 +13,50 @@ permissions:
   id-token: write
 
 jobs:
+  # This job finds the ID of the last successful build workflow run
+  find-build-run:
+    runs-on: ubuntu-latest
+    outputs:
+      # The run-id is passed to the 'publish' job
+      run-id: ${{ steps.get-run.outputs.run-id }}
+    steps:
+      - name: Find latest successful build run
+        id: get-run
+        env:
+          # Use the default GITHUB_TOKEN to authenticate with the API
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Use the GitHub CLI to find the latest successful workflow run for 'test-build.yml'
+          # It queries for runs on the specified branch with 'success' status and gets the ID
+          echo "Searching for successful 'test-build.yml' run on branch '${{ github.event.inputs.target_branch || 'main' }}'..."
+          RUN_ID=$(gh run list --workflow="test-build.yml" --branch="${{ github.event.inputs.target_branch || 'main' }}" --status=success --limit=1 --json databaseId --jq '.[0].databaseId')
+          
+          if [ -z "$RUN_ID" ]; then
+            echo "::error::No successful build run found for the specified branch. Please ensure the test-build workflow has completed successfully."
+            exit 1
+          fi
+          
+          echo "Found successful build run with ID: $RUN_ID"
+          echo "run-id=$RUN_ID" >> $GITHUB_OUTPUT
+
+  # This job downloads the artifact from the found run and deploys it
   publish:
+    needs: find-build-run
     runs-on: ubuntu-latest
     environment: production
     
     steps:
-    - name: Setup Pages
-      uses: actions/configure-pages@v5
-      
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
-      with:
-        pattern: web-app-build-*
-        merge-multiple: true
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
         
-    - name: Deploy to GitHub Pages
-      uses: actions/deploy-pages@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          # The critical part: specify the run-id from the job above
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ needs.find-build-run.outputs.run-id }}
+          # The name of the artifact uploaded by the build workflow
+          name: github-pages
+          
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
