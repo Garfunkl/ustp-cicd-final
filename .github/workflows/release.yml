@@ -1,0 +1,39 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+' # Triggers on tags like v1.0.0, v1.2.3, etc.
+
+permissions:
+  contents: write # Required to create a release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      # Find the last successful build run on the branch this tag points to
+      # and download its build artifacts.
+      - name: Download build artifacts
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: test-build.yml # Your build workflow file
+          # The action automatically finds the branch from the tag's commit
+          workflow_conclusion: success
+          name: github-pages # The artifact to download
+          path: ./artifacts # Download to a temporary directory
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # The title of the release, e.g., "USTP CI/CD Tetris v1.0.0"
+          name: "USTP CI/CD Tetris ${{ github.ref_name }}"
+          
+          # Automatically generate release notes from commits since the last release
+          generate_release_notes: true
+          
+          # Attach the downloaded artifacts to the release
+          files: ./artifacts/*
