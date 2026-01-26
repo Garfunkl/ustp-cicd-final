@@ -17,4 +17,4 @@ jobs:
           # Only check markdown files
           files: '**/*.md'
           # Configuration to ignore specific technical terms
-          extra_args: '--ignore-words-list vscode'
+          extra_args: '--ignore-words-list vscode USTP Tetris ustp cicd'
