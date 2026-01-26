@@ -4,8 +4,7 @@
 [![Publish Status](https://github.com/Garfunkl/ustp-cicd-final/actions/workflows/publish.yml/badge.svg)](https://github.com/Garfunkl/ustp-cicd-final/actions/workflows/publish.yml)
 [![Release Status](https://github.com/Garfunkl/ustp-cicd-final/actions/workflows/release.yml/badge.svg)](https://github.com/Garfunkl/ustp-cicd-final/actions/workflows/release.yml)
 [![Spell Check](https://github.com/Garfunkl/ustp-cicd-final/actions/workflows/spell-check.yml/badge.svg)](https://github.com/Garfunkl/ustp-cicd-final/actions/workflows/spell-check.yml)
-[![Coverage Status](https://raw.githubusercontent.com/garfunkl/ustp-cicd-final/badges/coverage.svg)](https://github.com/garfunkl/ustp-cicd-final/actions/workflows/test-build.yml)
-![coverage2](https://img.shields.io/badge/dynamic/json?url=https://garfunkl.github.io/ustp-cicd-final/coverage/coverage-summary.json&query=$.total.lines.pct&suffix=%25&label=coverage)
+[![coverage](https://img.shields.io/badge/dynamic/json?url=https://garfunkl.github.io/ustp-cicd-final/coverage/coverage-summary.json&query=$.total.lines.pct&suffix=%25&label=coverage)](https://github.com/garfunkl/ustp-cicd-final/actions/workflows/test-build.yml)
 ## 🚀 Live Demo
 
 Check out the deployed application here: [https://garfunkl.github.io/ustp-cicd-final/](https://garfunkl.github.io/ustp-cicd-final/)
