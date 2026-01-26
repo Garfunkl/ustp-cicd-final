@@ -28,7 +28,6 @@ jobs:
       - name: Checkout (optional)
         uses: actions/checkout@v4
 
-
       - name: Download build artifact from latest successful build run
         uses: dawidd6/action-download-artifact@v6
         with:
@@ -36,19 +35,18 @@ jobs:
           branch: ${{ inputs.run_branch }}
           workflow_conclusion: success
           name: ${{ inputs.artifact_name }}
-          path: .
+          path: .                 # Unpack into repository root
           if_no_artifact_found: fail
           check_artifacts: true
           skip_unpack: false
         
-      # Package the site contents as a Pages artifact
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: ./site            # Now exists because of the parent-folder trick
         
-      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
 

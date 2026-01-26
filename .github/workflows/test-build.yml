@@ -79,21 +79,20 @@ jobs:
         test -f coverage/coverage-summary.json
 
 
-    # ⬆️ Upload a single artifact that contains BOTH dist/ and coverage/, under one root folder
     - name: Stage site folder for Pages
       run: |
-        rm -rf site
-        mkdir -p site
+        rm -rf pages site
+        mkdir -p pages/site
         # Put the built site at the root of 'site'
-        cp -R dist/* site/
-        # Also include coverage under /coverage for easy browsing
-        cp -R coverage site/coverage
+        cp -R dist/* pages/site/
+        # Also include coverage under /coverage
+        cp -R coverage pages/site/ || true
         
-    - name: Upload Pages artifact
+    - name: Upload Pages artifact (includes top-level site/)
       uses: actions/upload-artifact@v4
       with:
         name: github-pages
-        path: site
+        path: pages           # <-- upload the parent folder, not 'site' directly
         retention-days: 1
       
 
