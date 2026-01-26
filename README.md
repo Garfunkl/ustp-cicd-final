@@ -3,7 +3,7 @@
 ![Build Status](https://github.com/garfunkl/ustp-cicd-final/actions/workflows/test-build.yml/badge.svg?branch=main&event=push)
 ![Publish Status](https://github.com/garfunkl/ustp-cicd-final/actions/workflows/publish.yml/badge.svg?branch=main)
 ![Release Status](https://github.com/garfunkl/ustp-cicd-final/actions/workflows/release.yml/badge.svg?branch=main)
-![Coverage](https://img.shields.io/badge/coverage-???-brightgreen)
+[![Coverage Status](https://coveralls.io/repos/github/garfunkl/ustp-cicd-final/badge.svg?branch=main)](https://coveralls.io/github/garfunkl/ustp-cicd-final?branch=main)
 
 ## 🚀 Live Demo
 

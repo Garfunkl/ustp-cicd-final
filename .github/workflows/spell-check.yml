@@ -14,7 +14,5 @@ jobs:
       - name: Run Spell Check
         uses: streetsidesoftware/cspell-action@v6
         with:
-          # Only check markdown files
-          files: '**/*.md'
-          # Configuration to ignore specific technical terms
-          extra_args: '--ignore-words-list vscode'
+          check-files: true
+
