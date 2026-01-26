@@ -30,14 +30,7 @@ jobs:
       
     - name: Run tests
       run: npm run test:ci
-      
-    - name: Upload coverage to Coveralls
-      if: matrix.os == 'ubuntu-latest'
-      uses: coverallsapp/github-action@v2
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./coverage/lcov.info
-      
+          
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()
@@ -49,6 +42,34 @@ jobs:
         retention-days: 30
         compression-level: 6
 
+  coverage-badge:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results-ubuntu-latest-${{ github.sha }}
+          path: ./
+
+      - name: Generate Coverage Badge
+        uses: weiran-zsd/coverage-badge-action@v1
+        with:
+          coverage-summary-path: ./coverage/coverage-summary.json
+          badge-path: ./coverage.svg
+          badge-format: svg
+
+      - name: Commit Badge
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add ./coverage.svg
+          git commit -m "update coverage badge" || echo "No changes to commit"
+          git push
   # This job builds the app and uploads the artifact, running only on Ubuntu.
   build-and-upload:
     # This job depends on the 'test' job completing successfully on all OSes.
@@ -78,3 +99,4 @@ jobs:
         # IMPORTANT: Verify this path is correct for your project
         path: ./dist
         retention-days: 1
+
