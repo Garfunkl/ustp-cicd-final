@@ -14,7 +14,7 @@
         "test:ui": "vitest --ui",
         "test:run": "vitest run",
         "test:coverage": "vitest run --coverage",
-        "test:ci": "vitest run --coverage --reporter=verbose --reporter=junit --outputFile=junit.xml"
+        "test:ci": "vitest --run --coverage"
     },
     "dependencies": {
         "@github/spark": ">=0.43.1 <1",
