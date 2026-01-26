@@ -42,24 +42,6 @@ jobs:
         retention-days: 30
         compression-level: 6
 
-  coverage-badge:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Download coverage artifact (Ubuntu)
-        uses: actions/download-artifact@v4
-        with:
-          name: test-results-ubuntu-latest-${{ github.sha }}
-          path: ./
-
-      # Generates ./badges/coverage.svg and pushes it to a Pages-compatible branch
-      - name: Update Coverage Badge
-        uses: we-cli/coverage-badge-action@main
-
   # This job builds the app and uploads the artifact, running only on Ubuntu.
   build-and-upload:
     # This job depends on the 'test' job completing successfully on all OSes.
