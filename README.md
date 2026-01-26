@@ -59,4 +59,4 @@ To run the test suite:
 npm run test:ci
 ```
 
-![and most importantly](https://shattereddisk.github.io/rickroll/)
+![and most importantly]([https://shattereddisk.github.io/rickroll/](https://shattereddisk.github.io/rickroll/rickroll.mp4))
