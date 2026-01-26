@@ -1,0 +1,14 @@
+# Dependabot configuration file
+# See: https://github.com/dependabot/demo/blob/main/.github/dependabot.yml
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # open-pull-requests-limit: 10 # Default, but good to be explicit
+    group:
+      dependency-type: "all"
+      # The name that will appear on the PR
+      name: "Weekly npm dependency updates"
