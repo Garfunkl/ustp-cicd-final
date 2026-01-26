@@ -15,11 +15,4 @@ jobs:
         uses: streetsidesoftware/cspell-action@v6
         with:
           check-files: true
-          files: "**/*.md"
-          extra_args: >
-            --ignore-words-list
-            vscode
-            USTP
-            Tetris
-            ustp
-            cicd
+
